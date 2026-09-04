@@ -3,15 +3,13 @@
 > **Hyperlocal On-Demand Delivery Platform for Tier-2 & Tier-3 Indian Cities**  
 > *Zero-Warehouse Architecture · Empowering Local Neighborhood Commerce · Competition-Ready Full-Stack MVP*
 
-[![Live Demo](https://img.shields.io/badge/Live%20Demo-Available%20Now-00B373?style=for-the-badge&logo=google-chrome&logoColor=white)](https://benjamin-those-ways-beads.trycloudflare.com)
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-Active%2024%2F7-00B373?style=for-the-badge&logo=render&logoColor=white)](https://tvarit-demo.onrender.com)
 [![GitHub Repo](https://img.shields.io/badge/GitHub-Repository-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/dattananduri/Tvarit-Demo)
-[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/dattananduri/Tvarit-Demo)
 
-### 🌐 Instant Live Demo URL (Running from Localhost):
-👉 **[https://benjamin-those-ways-beads.trycloudflare.com](https://benjamin-those-ways-beads.trycloudflare.com)**
+### 🌐 Official Live Cloud Demo URL (Online 24/7):
+👉 **[https://tvarit-demo.onrender.com](https://tvarit-demo.onrender.com)**
 
-### ☁️ Permanent 24/7 Cloud URL (Runs Even When Computer is Closed):
-Click the **[Deploy to Render](https://render.com/deploy?repo=https://github.com/dattananduri/Tvarit-Demo)** button to launch your 24/7 cloud instance in 1 click!
+*(Hosted in the cloud on Render — stays online 24/7 even when your personal computer is shut down!)*
 
 #### 🔑 Instant Demo Login Accounts:
 | Persona | Email | Password | Role & Highlights |
