@@ -4,9 +4,12 @@ import com.datta.tvaritfinal.entity.Partner;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-@Repository
-public interface PartnerRepository
-        extends JpaRepository<Partner, Long> {
+import java.util.List;
+import java.util.Optional;
 
-    Partner findByPartnerEmail(String partnerEmail);
+@Repository
+public interface PartnerRepository extends JpaRepository<Partner, Long> {
+    Optional<Partner> findByPartnerEmail(String partnerEmail);
+    boolean existsByPartnerEmail(String partnerEmail);
+    List<Partner> findByIsOnlineTrue();
 }

@@ -1,18 +1,45 @@
 package com.datta.tvaritfinal.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
 
 @Entity
+@Table(name = "items")
 public class Item {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long itemId;
+
+    @Column(nullable = false)
     private String itemName;
-    private int itemQuantity;
-    private Double itemPrice;
+
+    private Integer itemQuantity = 1;
+
+    private String unit = "unit";
+
+    private Double itemPrice = 0.0;
+
+    private String notes;
+
+    private Boolean isPurchased = false;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "order_id")
+    @JsonIgnore
+    private CustomerOrder order;
+
+    public Item() {}
+
+    public Item(Long itemId, String itemName, Integer itemQuantity, String unit, Double itemPrice, String notes) {
+        this.itemId = itemId;
+        this.itemName = itemName;
+        this.itemQuantity = itemQuantity != null ? itemQuantity : 1;
+        this.unit = unit != null ? unit : "unit";
+        this.itemPrice = itemPrice != null ? itemPrice : 0.0;
+        this.notes = notes;
+        this.isPurchased = false;
+    }
 
     public Long getItemId() {
         return itemId;
@@ -30,12 +57,20 @@ public class Item {
         this.itemName = itemName;
     }
 
-    public int getItemQuantity() {
+    public Integer getItemQuantity() {
         return itemQuantity;
     }
 
-    public void setItemQuantity(int itemQuantity) {
+    public void setItemQuantity(Integer itemQuantity) {
         this.itemQuantity = itemQuantity;
+    }
+
+    public String getUnit() {
+        return unit;
+    }
+
+    public void setUnit(String unit) {
+        this.unit = unit;
     }
 
     public Double getItemPrice() {
@@ -46,7 +81,34 @@ public class Item {
         this.itemPrice = itemPrice;
     }
 
-    public Double getTotalPrice(){
+    public String getNotes() {
+        return notes;
+    }
+
+    public void setNotes(String notes) {
+        this.notes = notes;
+    }
+
+    public Boolean getIsPurchased() {
+        return isPurchased;
+    }
+
+    public void setIsPurchased(Boolean isPurchased) {
+        this.isPurchased = isPurchased;
+    }
+
+    public CustomerOrder getOrder() {
+        return order;
+    }
+
+    public void setOrder(CustomerOrder order) {
+        this.order = order;
+    }
+
+    public Double getTotalPrice() {
+        if (itemQuantity == null || itemPrice == null) {
+            return 0.0;
+        }
         return itemQuantity * itemPrice;
     }
 }

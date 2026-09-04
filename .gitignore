@@ -31,3 +31,19 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### Environment & Secrets ###
+.env
+*.env
+.env.*
+!.env.example
+
+### Node / Frontend ###
+node_modules/
+frontend/node_modules/
+frontend/dist/
+
+### OS files ###
+.DS_Store
+Thumbs.db
+

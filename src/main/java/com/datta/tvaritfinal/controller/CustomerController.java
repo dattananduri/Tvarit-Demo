@@ -1,53 +1,100 @@
 package com.datta.tvaritfinal.controller;
 
-import com.datta.tvaritfinal.dto.CustomerLoginRequest;
+import com.datta.tvaritfinal.dto.*;
 import com.datta.tvaritfinal.entity.Customer;
-import com.datta.tvaritfinal.entity.CustomerOrder;
+import com.datta.tvaritfinal.security.UserPrincipal;
+import com.datta.tvaritfinal.service.AuthService;
 import com.datta.tvaritfinal.service.CustomerService;
+import jakarta.validation.Valid;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/customer")
+@RequestMapping
 public class CustomerController {
 
+    private final CustomerService customerService;
+    private final AuthService authService;
 
-    private final CustomerService service;
-
-    public CustomerController(CustomerService service){
-        this.service = service;
+    public CustomerController(CustomerService customerService, AuthService authService) {
+        this.customerService = customerService;
+        this.authService = authService;
     }
 
-
-    @GetMapping("/profile/{id}")
-    public Customer getCustomer(@PathVariable Long id){
-        return service.getCustomer(id);
+    // --- Legacy Endpoints for compatibility ---
+    @PostMapping("/customer/login")
+    public ResponseEntity<AuthResponse> loginCustomerLegacy(@RequestBody LoginRequest loginRequest) {
+        return ResponseEntity.ok(authService.loginCustomer(loginRequest));
     }
 
-    @PostMapping("/login")
-    public Customer loginCustomer(@RequestBody CustomerLoginRequest loginRequest){
-        return service.loginCustomer(loginRequest);
+    @PostMapping("/customer/register")
+    public ResponseEntity<AuthResponse> registerCustomerLegacy(@RequestBody RegisterCustomerRequest customer) {
+        return ResponseEntity.ok(authService.registerCustomer(customer));
     }
 
-    @PostMapping("/register")
-    public Customer registerCustomer(@RequestBody Customer customer){
-        return service.registerCustomer(customer);
+    @GetMapping("/customer/profile/{id}")
+    public ResponseEntity<CustomerProfileResponse> getCustomerLegacy(@PathVariable Long id) {
+        return ResponseEntity.ok(customerService.getCustomerProfile(id));
     }
 
-
-    @PutMapping("/profile/{id}")
-    public Customer updateCustomer(
+    @PutMapping("/customer/profile/{id}")
+    public ResponseEntity<CustomerProfileResponse> updateCustomerLegacy(
             @PathVariable Long id,
-            @RequestBody Customer customer)
-    {
-        return service.updateCustomer(id, customer);
+            @RequestBody UpdateCustomerRequest customer) {
+        return ResponseEntity.ok(customerService.updateCustomer(id, customer));
     }
 
-    @GetMapping("/{id}/orders")
-    public List<CustomerOrder> getOrders(
-            @PathVariable Long id)
-    {
-        return service.getOrders(id);
+    @GetMapping("/customer/{id}/orders")
+    public ResponseEntity<List<OrderResponse>> getOrdersLegacy(@PathVariable Long id) {
+        return ResponseEntity.ok(customerService.getOrders(id));
+    }
+
+    // --- Modern REST API Endpoints ---
+    @GetMapping("/api/customer/me")
+    public ResponseEntity<CustomerProfileResponse> getMyProfile(@AuthenticationPrincipal UserPrincipal principal) {
+        return ResponseEntity.ok(customerService.getCustomerProfile(principal.getId()));
+    }
+
+    @PutMapping("/api/customer/me")
+    public ResponseEntity<CustomerProfileResponse> updateMyProfile(
+            @AuthenticationPrincipal UserPrincipal principal,
+            @RequestBody UpdateCustomerRequest request) {
+        return ResponseEntity.ok(customerService.updateCustomer(principal.getId(), request));
+    }
+
+    @GetMapping("/api/customer/orders")
+    public ResponseEntity<List<OrderResponse>> getMyOrders(@AuthenticationPrincipal UserPrincipal principal) {
+        return ResponseEntity.ok(customerService.getOrders(principal.getId()));
+    }
+
+    @GetMapping("/api/customer/addresses")
+    public ResponseEntity<List<AddressResponse>> getAddresses(@AuthenticationPrincipal UserPrincipal principal) {
+        return ResponseEntity.ok(customerService.getCustomerAddresses(principal.getId()));
+    }
+
+    @PostMapping("/api/customer/addresses")
+    public ResponseEntity<AddressResponse> addAddress(
+            @AuthenticationPrincipal UserPrincipal principal,
+            @Valid @RequestBody AddressRequest request) {
+        return ResponseEntity.ok(customerService.addAddress(principal.getId(), request));
+    }
+
+    @PutMapping("/api/customer/addresses/{addressId}/default")
+    public ResponseEntity<AddressResponse> setDefaultAddress(
+            @AuthenticationPrincipal UserPrincipal principal,
+            @PathVariable Long addressId) {
+        return ResponseEntity.ok(customerService.setDefaultAddress(addressId, principal.getId()));
+    }
+
+    @DeleteMapping("/api/customer/addresses/{addressId}")
+    public ResponseEntity<Void> deleteAddress(
+            @AuthenticationPrincipal UserPrincipal principal,
+            @PathVariable Long addressId) {
+        customerService.deleteAddress(addressId, principal.getId());
+        return ResponseEntity.noContent().build();
     }
 }
+
